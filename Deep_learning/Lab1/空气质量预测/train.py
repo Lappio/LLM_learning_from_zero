@@ -24,8 +24,12 @@ Y = dataset['AQI']
 # 数据集的划分设置seed
 x_train, x_test, y_train, y_test = train_test_split(X,Y,test_size=0.2,random_state=42)
 # 归一化
-sc = MinMaxScaler(feature_range=(0,1))
-x_train = sc.fit_transform(x_train)
-x_test = sc.transform(x_test)
+sc_X = MinMaxScaler(feature_range=(0,1))
+x_train = sc_X.fit_transform(x_train)
+x_test = sc_X.transform(x_test)
 # print(y_test)
+sc_Y = MinMaxScaler(feature_range=(0,1))
+y_train = sc_Y.fit_transform(y_train)
+y_test = sc_Y.transform(y_test)
+
 
