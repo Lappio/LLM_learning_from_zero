@@ -18,8 +18,8 @@ Y = dataset['AQI']
 # print(X)
 # print(Y)
 # 数据集的划分设置seed
-x_train, x_test, y_train, y_test = train_test_split(X,Y,test_size=0.2,random_state=42)
-print(y_test)
+x_train, x_test, y_train, y_test = train_test_split(X,Y,test_size=0.05,random_state=42)
+# print(y_test)
 # 归一化
 sc_X = MinMaxScaler(feature_range=(0,1))
 x_train = sc_X.fit_transform(x_train)
@@ -37,3 +37,15 @@ yhat = model.predict(x_test)
 # 预测值反归一化
 prediction = sc_Y.inverse_transform(yhat)
 real = sc_Y.inverse_transform(y_test)
+
+# print(yhat)
+# 计算评价指标
+rmse = sqrt(mean_squared_error(real,prediction))
+mape = np.mean(np.abs(real-prediction)/prediction)
+print('rmse',rmse)
+print('mape',mape)
+plt.plot(prediction,label="预测值")
+plt.plot(real,label="真实值")
+plt.title("全连接神经网络空气质量预测对比图")
+plt.legend()
+plt.show()
