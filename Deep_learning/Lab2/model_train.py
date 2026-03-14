@@ -7,11 +7,9 @@ from keras.layers import Dense,Flatten,Conv2D,MaxPool2D
 
 
 #读取训练集数据
-data_train = 'Deep_learning\Lab2\data\train'
-data_train= pathlib.Path(data_train)
-
-data_val = 'Deep_learning\Lab2\data\val'
-data_val = pathlib.Path(data_val)
+base_dir = pathlib.Path(__file__).resolve().parent
+data_train = base_dir / "data" / "train"
+data_val = base_dir / "data" / "val"
 #给数据类别放到列表数据中
 CLASS_NAMES = np.array(['Cr','In','Pa','PS','Rs','Sc'])
 
@@ -27,3 +25,37 @@ train_data_gen = image_generator.flow_from_directory(directory=str(data_train),b
 # 读取路径 shuffle打乱图片
 # 训练集生成器
 val_data_gen = image_generator.flow_from_directory(directory=str(data_val),batch_size=BATCH_SIZE,shuffle=True,target_size=(IMG_HEIGHT,IMG_WIDTH),classes=list(CLASS_NAMES)) 
+
+# 利用keras搭建卷积神经网络
+
+model = keras.Sequential()
+model.add(Conv2D(filters=6,kernel_size=5,input_shape=(32,32,3),activation='relu'))
+model.add(MaxPool2D(pool_size=(2,2),strides=(2,2)))
+model.add(Conv2D(filters=16,kernel_size=5,activation='relu'))
+model.add(MaxPool2D(pool_size=(2,2),strides=(2,2)))
+model.add(Conv2D(filters=120,kernel_size=5,activation='relu'))
+model.add(Flatten())
+model.add(Dense(84,activation='relu'))
+model.add(Dense(6,activation='softmax'))
+
+# 编译卷积神经网络
+model.compile(loss='categorical_crossentropy',optimizer='Adam',metrics=['accuracy'])
+#传入数据集进行训练
+history = model.fit(train_data_gen,validation_data=val_data_gen,epochs=50)
+
+# 保存训练好的模型
+model.save(base_dir / "model.h5")
+
+# 绘制loss图
+plt.plot(history.history['loss'],label='train')
+plt.plot(history.history['val_loss'],label='val')
+plt.title("Loss")
+plt.legend()
+plt.show()
+
+# 绘制准确率·
+plt.plot(history.history['accuracy'],label='train')
+plt.plot(history.history['val_accuracy'],label='val')
+plt.title("Accuracy")
+plt.legend()
+plt.show()
