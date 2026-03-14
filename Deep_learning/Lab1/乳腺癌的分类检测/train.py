@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt #画图包
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
-#导入leras框架
+#导入keras框架
 from tensorflow import keras
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.utils import to_categorical
